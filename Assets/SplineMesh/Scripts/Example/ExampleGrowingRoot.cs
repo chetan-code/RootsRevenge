@@ -15,7 +15,7 @@ namespace SplineMesh
     /// 
     /// This component is only for demo purpose and is not intended to be used as-is.
     /// </summary>
-    //[ExecuteInEditMode]
+    [ExecuteInEditMode]
     [RequireComponent(typeof(Spline))]
     public class ExampleGrowingRoot : MonoBehaviour
     {
@@ -38,14 +38,14 @@ namespace SplineMesh
             rate = 0;
             Init();
 #if UNITY_EDITOR
-            //EditorApplication.update += EditorUpdate;
+            EditorApplication.update += EditorUpdate;
 #endif
         }
 
         void OnDisable()
         {
 #if UNITY_EDITOR
-            //EditorApplication.update -= EditorUpdate;
+            EditorApplication.update -= EditorUpdate;
 #endif
         }
 
@@ -62,10 +62,10 @@ namespace SplineMesh
         void EditorUpdate()
         {
             rate += Time.deltaTime / DurationInSecond;
-            //if (rate > 1)
-            //{
-            //rate--;
-            //}
+            if (rate > 1)
+            {
+                rate--;
+            }
             Contort();
         }
 
