@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using SplineMesh;
 using UnityEngine;
 
 public class ThirdPersonCharacterController : MonoBehaviour
 {
     [SerializeField]
-    private CharacterController character;
+    private Transform character;
     [SerializeField]
     private float speed;
+    [SerializeField]
+    private RopeBuilder rope;
+    [SerializeField]
+    private Vector3 offset;
     private Camera mainCamera;
 
     private GameObject other;
@@ -35,7 +40,9 @@ public class ThirdPersonCharacterController : MonoBehaviour
         Vector3 cameraRight = new(mainCamera.transform.right.x, 0, mainCamera.transform.right.z);
 
         Vector3 moveDirection = cameraForward.normalized * y + cameraRight.normalized * x;
-        character.SimpleMove(new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed));
+        character.transform.position += new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed) * Time.deltaTime;
+        //character.SimpleMove(new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed));
+        rope.GetFirstSegment().transform.position = character.transform.position + offset;
     }
 
 
