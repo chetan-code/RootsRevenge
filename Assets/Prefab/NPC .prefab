@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 939190143}
   - component: {fileID: 939190142}
   m_Layer: 8
-  m_Name: Image
+  m_Name: WarningIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &939190141
 RectTransform:
   m_ObjectHideFlags: 0
@@ -190,7 +190,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213a67459a569ad4d845407022c3c7ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Camera: {fileID: 0}
 --- !u!1 &700624429129462434
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,6 +316,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 64
+  warningIndicator: {fileID: 939190140}
 --- !u!136 &700624429129462442
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -20,6 +20,8 @@ public class NPCController : MonoBehaviour
     private Vector2 changeIntrestTime = new Vector2(20, 30);
     [SerializeField]
     private LayerMask playerMask;
+    [SerializeField]
+    private GameObject warningIndicator;
     private NavMeshAgent agent;
 
     private NPCState currentState;
@@ -67,6 +69,7 @@ public class NPCController : MonoBehaviour
             Debug.Log("Raycast detected player");
             CharacterView view = hit.collider.gameObject.GetComponent<CharacterView>();
             var controller = view.GetCharacterController();
+            warningIndicator.SetActive(true);
             StartCoroutine(ReportPlayer(controller));
         }
     }
@@ -89,6 +92,10 @@ public class NPCController : MonoBehaviour
         }
         Debug.Log("New State : " + newState.ToString());
         currentState = newState;
+        if (currentState == NPCState.Idle || currentState == NPCState.Walk)
+        {
+            warningIndicator.SetActive(false);
+        }
     }
 
 
