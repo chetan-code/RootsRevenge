@@ -10,7 +10,7 @@ public class InputManager : MonoBehaviour
     public float Horizontal;
     public float Vertical;
 
-    public UnityEvent<Vector2> OnMouseClickEvent;
+    public UnityEvent OnAttack;
 
 
     public void Awake()
@@ -26,7 +26,7 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            OnMouseClickEvent.Invoke(Input.mousePosition);
+            OnAttack.Invoke();
         }
     }
 

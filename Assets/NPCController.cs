@@ -17,6 +17,8 @@ public class NPCController : MonoBehaviour
 
     [SerializeField]
     private Vector2 changeIntrestTime = new Vector2(20, 30);
+    [SerializeField]
+    private LayerMask playerMask;
     private NavMeshAgent agent;
 
     private NPCState currentState;
@@ -49,6 +51,12 @@ public class NPCController : MonoBehaviour
             agent.SetDestination(FindTargetOfInterest());
             ChangeState(NPCState.Walk);
         }
+
+        //Raycast Detection
+        // if (Physics.Raycast())
+        // {
+
+        // }
     }
 
 
@@ -69,5 +77,12 @@ public class NPCController : MonoBehaviour
         }
         Debug.Log("New State : " + newState.ToString());
         currentState = newState;
+    }
+
+
+    public void Kill()
+    {
+        Debug.Log("Killed NPC");
+        Destroy(this.gameObject);
     }
 }
