@@ -8,6 +8,7 @@ public enum NPCState
 {
     Idle,
     Walk,
+    Detected_Player,
     Dead,
 }
 
@@ -35,6 +36,12 @@ public class NPCController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (currentState == NPCState.Detected_Player)
+        {
+            return;
+        }
+
         if (timeSpent <= currentTimeToSpend)
         {
             timeSpent += Time.deltaTime;
@@ -52,11 +59,16 @@ public class NPCController : MonoBehaviour
             ChangeState(NPCState.Walk);
         }
 
+        RaycastHit hit;
         //Raycast Detection
-        // if (Physics.Raycast())
-        // {
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 10, playerMask))
+        {
 
-        // }
+            Debug.Log("Raycast detected player");
+            CharacterView view = hit.collider.gameObject.GetComponent<CharacterView>();
+            var controller = view.GetCharacterController();
+            StartCoroutine(ReportPlayer(controller));
+        }
     }
 
 
@@ -80,9 +92,41 @@ public class NPCController : MonoBehaviour
     }
 
 
+    private IEnumerator ReportPlayer(ThirdPersonCharacterController controller)
+    {
+        ChangeState(NPCState.Idle);
+        yield return new WaitForSeconds(3);
+        if (currentState == NPCState.Dead)
+        {
+            yield return null;
+        }
+        if (controller.GetPlayerState() == PlayerState.Walking)
+        {
+            //player is walking
+            //Game over
+            Debug.Log("Game Over : Player detected");
+        }
+        else
+        {
+            Debug.Log("NPC state : Back to idle");
+            ChangeState(NPCState.Idle);
+        }
+    }
+
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.forward * 10);
+    }
+
     public void Kill()
     {
+        agent.isStopped = true;
+        //Kill Effect
         Debug.Log("Killed NPC");
-        Destroy(this.gameObject);
+
+        ChangeState(NPCState.Dead);
+        //Destroy(this.gameObject);
     }
 }

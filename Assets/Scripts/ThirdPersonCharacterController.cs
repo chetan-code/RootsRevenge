@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using SplineMesh;
 using UnityEngine;
-
+using UnityEngine.AI;
 
 public enum PlayerState
 {
@@ -13,7 +13,8 @@ public enum PlayerState
 public class ThirdPersonCharacterController : MonoBehaviour
 {
     [SerializeField]
-    private Transform character;
+    private CharacterController character;
+
     [SerializeField]
     private float speed;
     [SerializeField]
@@ -22,6 +23,8 @@ public class ThirdPersonCharacterController : MonoBehaviour
     private Vector3 offset;
     [SerializeField]
     private LayerMask npcMask;
+    [SerializeField]
+    private GameObject rootsEffect;
     private Camera mainCamera;
 
     private GameObject other;
@@ -29,6 +32,10 @@ public class ThirdPersonCharacterController : MonoBehaviour
 
     private PlayerState playerState;
 
+    public PlayerState GetPlayerState()
+    {
+        return playerState;
+    }
 
     private void Start()
     {
@@ -60,8 +67,8 @@ public class ThirdPersonCharacterController : MonoBehaviour
         Vector3 cameraRight = new(mainCamera.transform.right.x, 0, mainCamera.transform.right.z);
 
         Vector3 moveDirection = cameraForward.normalized * y + cameraRight.normalized * x;
-        character.transform.position += new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed) * Time.deltaTime;
-        //character.SimpleMove(new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed));
+        //var newPos = character.transform.position + new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed) * Time.deltaTime;
+        character.SimpleMove(new Vector3(moveDirection.x * speed, 0, moveDirection.z * speed));
         rope.GetFirstSegment().transform.position = character.transform.position + offset;
     }
 
@@ -70,7 +77,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     private void OnAttackHandler()
     {
         //sphere cast
-        Collider[] colliders = Physics.OverlapSphere(character.position, 1, npcMask);
+        Collider[] colliders = Physics.OverlapSphere(character.transform.position, 1f, npcMask);
         NPCController npc = null;
         //look if we have any npc
         Debug.Log("Detected colliders : " + colliders.Length);
@@ -79,9 +86,22 @@ public class ThirdPersonCharacterController : MonoBehaviour
             npc = colliders[0].GetComponent<NPCController>();
         }
         //attack the first NPC
-        if (npc != null) { npc.Kill(); }
+        if (npc != null)
+        {
+            npc.Kill();
+            Instantiate(rootsEffect, new Vector3(npc.transform.position.x, rootsEffect.transform.position.y, npc.transform.position.z), Quaternion.identity);
+            StartCoroutine(RemoveNPC(npc));
+            Debug.Log("Attacking : " + npc);
+        }
 
-        Debug.Log("Attacking : " + npc);
+
     }
+
+    private IEnumerator RemoveNPC(NPCController npc)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(npc.transform.gameObject);
+    }
+
 
 }

@@ -1419,7 +1419,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "Grow",
     "m_DefaultReferenceName": "_Grow",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "_Grow",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
